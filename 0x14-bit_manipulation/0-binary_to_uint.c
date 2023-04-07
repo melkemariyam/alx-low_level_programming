@@ -1,38 +1,30 @@
-#include "holberton.h"
+#include <stdlib.h>
+#include "main.h"
 
 /**
- * binary_to_uint - convert binary to unsigned int
- * @b: binary
- * Return: unsigned int
+ * binary_to_uint - converts a string of ones and zeros to
+ * the unsigned int equivalent
+ * @b: the string to be converted
+ * Return: unsigned int equivalent of binary string, or 0 if
+ * string is empty or string contains chars other than 1 or 0
  */
 unsigned int binary_to_uint(const char *b)
 {
-
-	int len = 0, i;
-	unsigned int sum = 0;
+	unsigned int n, idx;
 
 	if (b == NULL)
-		return (sum);
+		return (0);
 
-	/* find string length */
-	while (b[len] != '\0')
-		len++;
-	len -= 1;
-
-	/* iterate string and if '1' then multiply by power of 2 */
-	/* get power of 2 via binary (e.g. 1<<2 = 100 in binary = 4) */
-	i = 0;
-	while (b[i])
+	idx = 0;
+	n = 0;
+	while (b[idx] != '\0')
 	{
-		if ((b[i] != '0') && (b[i] != '1'))
-			return (sum);
-
-		if (b[i] == '1')
-			sum += (1 * (1 << len));
-		i++;
-		len--;
+		if (b[idx] != '0' && b[idx] != '1')
+			return (0);
+		n <<= 1;
+		n = n + b[idx] - '0';
+		idx++;
 	}
 
-	return (sum);
+	return (n);
 }
-
