@@ -1,50 +1,48 @@
-#include "holberton.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/uio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdlib.h>
 
 /**
- * read_textfile - read a certain size and prints to std output
- * @filename: file to read from
- * @letters: size to read
- * Return: actual size read and printed
+ * read_textfile - A function that reads a text file and prints
+ * to the POSIX STDOUT
+ * @filename: The filename to open
+ * @letters: The number of letters to read and print
+ * Return: The number of letters read and printed, or 0 on failure
  */
-
 ssize_t read_textfile(const char *filename, size_t letters)
 {
-	int fd; /* file descriptor */
-	ssize_t n_read, n_wrote;
-	char *buffer;
+	int fdo, fdr, fdw;
+	char *temp;
 
 	if (filename == NULL)
 		return (0);
 
-	/* open */
-	fd = open(filename, O_RDONLY);
-	if (fd == -1)
+	temp = malloc(sizeof(char) * letters);
+	if (temp == NULL)
 		return (0);
 
-	/* malloc buffer */
-	buffer = malloc(sizeof(char) * letters);
-	if (buffer == NULL)
-		return (0);
-
-	/* read */
-	n_read = read(fd, buffer, letters);
-	if (n_read == -1)
+	fdo = open(filename, O_RDONLY);
+	if (fdo < 0)
 	{
-		free(buffer);
-		close(fd);
+		free(temp);
 		return (0);
 	}
 
-	/* write */
-	n_wrote = write(STDOUT_FILENO, buffer, n_read);
-	if (n_wrote == -1)
+	fdr = read(fdo, temp, letters);
+	if (fdr < 0)
 	{
-		free(buffer);
-		close(fd);
+		free(temp);
 		return (0);
 	}
 
-	close(fd);
-	return (n_read);
+	fdw = write(STDOUT_FILENO, temp, fdr);
+	free(temp);
+	close(fdo);
 
+	if (fdw < 0)
+		return (0);
+	return ((ssize_t)fdw);
 }
