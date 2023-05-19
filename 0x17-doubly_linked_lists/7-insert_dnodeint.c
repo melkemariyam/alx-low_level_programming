@@ -1,52 +1,50 @@
 #include "lists.h"
-#include <stdlib.h>
 
 /**
- * insert_dnodeint_at_index - A function that inserts a node at
- * position in a list.
- * @h: The double pointer to the head.
- * @idx: The index to insert new node at.
- * @n: The data to add to new node.
- * Return: A pointer to new element, or NULL on failure.
- */
+  * insert_dnodeint_at_index -  inserts a new node at a given position
+  * @h: header of double linked list
+  * @idx: index of the node, starting from 0
+  * @n: is a given number
+  * Return: a address of nth node
+  */
 dlistint_t *insert_dnodeint_at_index(dlistint_t **h, unsigned int idx, int n)
 {
-	dlistint_t *new_node = NULL, *temp = NULL;
-	unsigned int i = 0;
+	dlistint_t *new, *headcopy = *h;
+	unsigned int i;
 
-	new_node = malloc(sizeof(dlistint_t));
-	if (!new_node)
+	new = malloc(sizeof(dlistint_t));
+	if (new == NULL)
 		return (NULL);
-	new_node->next = NULL;
-	new_node->prev = NULL;
-	new_node->n = n;
-	if (!h || !(*h))
-		*h = new_node;
-	else
+	new->n = n;
+	while (headcopy != NULL && headcopy->prev != NULL)
 	{
-		temp = *h;
-		while (idx != i++ && temp->next)
-			temp = temp->next;
-		if (temp->next)
-			new_node->prev = temp->prev;
-		else
-			new_node->prev = temp;
-		if (idx == i)
-			temp->next = new_node, new_node->prev = temp;
-		else if (idx == i - 1)
-		{
-			if (temp->prev)
-				temp->prev->next = new_node;
-			else
-				*h = new_node;
-			temp->prev = new_node;
-			new_node->next = temp;
-		}
-		else
-		{
-			free(new_node);
-			return (NULL);
-		}
+		headcopy = headcopy->prev;
+		*h = (*h)->prev;
 	}
-	return (new_node);
+	if (idx == 0)
+	{
+		free(new);
+		return (add_dnodeint(h, n));
+	}
+
+	for (i = 0; (i < idx - 1) && headcopy != NULL; i++)
+		headcopy = headcopy->next;
+	if (headcopy == NULL)
+	{
+		free(new);
+		return (NULL);
+	}
+	if (headcopy->next == NULL)
+	{
+		new->next = NULL;
+		new->prev = headcopy;
+		headcopy->next = new;
+	} else
+	{
+		new->next = headcopy->next;
+		new->prev = headcopy;
+		headcopy->next->prev = new;
+		headcopy->next = new;
+	}
+	return (new);
 }
